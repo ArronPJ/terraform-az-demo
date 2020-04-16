@@ -12,9 +12,7 @@ variable "resource_prefix" {}
 variable "web_server_address_space" {}
 variable "web_server_address_prefix" {}
 variable "web_server_name" {}
-
-## VNET
-
+variable "environment" {}
 
 # azure resource manager
 provider "azurerm" {
@@ -51,7 +49,7 @@ resource "azurerm_virtual_network" "web_server_vnet" {
 
     
     tags = {
-        environment = "Stage"
+        environment = "${var.environment}"
     }
 }
 # Subnet
@@ -64,9 +62,10 @@ resource "azurerm_subnet" "web_server_subnet" {
 
 # Azure Network Interface (private/public<Static/Dynamic>, DNS)
 resource "azurerm_network_interface" "web_server_nic" {
-  name                  = "${var.web_server_name}-nic"
-  location              = "${azurerm_resource_group.web_server_rg.location}"
-  resource_group_name   = "${azurerm_resource_group.web_server_rg.name}"
+  name                      = "${var.web_server_name}-nic"
+  location                  = "${azurerm_resource_group.web_server_rg.location}"
+  resource_group_name       = "${azurerm_resource_group.web_server_rg.name}"
+  network_security_group_id = "${azurerm_network_security_group.web_server_nsg.id}"
 
   ip_configuration {
     name                          = "${var.web_server_name}-ip"
@@ -83,4 +82,24 @@ resource "azurerm_public_ip" "web_server_public_ip" {
   allocation_method             = "Dynamic"
 }
 
+resource "azurerm_network_security_group" "web_server_nsg" {
+  name                          = "${var.web_server_name}-nsg"
+  location                      = "${azurerm_resource_group.web_server_rg.location}"
+  resource_group_name           = "${azurerm_resource_group.web_server_rg.name}"
+
+}
+
+resource "azurerm_network_security_rule" "web_server_nsg_rule_rdp" {
+  name                          = "RDP Inbound"
+  priority                      = 100
+  direction                     = "Inbound"
+  access                        = "Allow"
+  protocol                      = "TCP"
+  source_port_range             = "*"
+  destination_port_range        = "3389"   #RDP
+  source_address_prefix         = "*"
+  destination_address_prefix    = "*"
+  resource_group_name           = "${azurerm_resource_group.web_server_rg.name}"
+  network_security_group_name   = "${azurerm_network_security_group.web_server_nsg.name}"
+}
 
