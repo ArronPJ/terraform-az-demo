@@ -1,13 +1,17 @@
 
-# From Terraform.tfvars
-
+# Load From Terraform.tfvars
+## IAM
 variable "client_id" {}
 variable "client_secret" {}
 variable "tenant_id" {}
 variable "subscription_id" {}
-
+## Resource Group
 variable "web_server_location" {}
-variable "web_rg_name" {}
+variable "web_rg" {}
+variable "resource_prefix" {}
+variable "web_server_address_space" {}
+
+## VNET
 
 
 # azure resource manager
@@ -29,9 +33,16 @@ provider "azurerm" {
 }
 
 # resource group : Logical Resource , put all resource into a resource group.
-resource "azurerm_resource_group" "web-rg" {
-    name = var.web_rg_name
+resource "azurerm_resource_group" "web_rg" {
+    name     = var.web_rg
     location = var.web_server_location
 }
 
-# 
+# VNET
+resource "azurerm_virtual_network" "web_server_vnet" {
+    name                = "${var.resource_prefix}-vnet"
+    location            = var.web_server_location
+    resource_group_name = "${azurerm_resource_group.web_rg.name}"
+    address_space       = [var.web_server_address_space]
+}
+
