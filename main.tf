@@ -102,4 +102,35 @@ resource "azurerm_network_security_rule" "web_server_nsg_rule_rdp" {
   resource_group_name           = "${azurerm_resource_group.web_server_rg.name}"
   network_security_group_name   = "${azurerm_network_security_group.web_server_nsg.name}"
 }
+# VM Window
+resource "azurerm_virtual_machine" "web_server" {
+  name  = "${var.web_server_name}"
+  location                  = "${azurerm_resource_group.web_server_rg.location}"
+  resource_group_name       = "${azurerm_resource_group.web_server_rg.name}"
+  network_interface_ids     = ["${azurerm_network_interface.web_server_nic.id}"]
+  vm_size                   = "Standard_B1s"
+
+  storage_image_reference {
+    publisher   = "MicrosoftWindowsServer"
+    offer       = "WindowsServer"
+    sku         = "2016-Datacenter-Server-Core-smalldisk"
+    version     = "latest"
+  }
+
+  storage_os_disk {
+    name = "${var.web_server_name}-os"
+    caching = "ReadWrite"
+    create_option = "FromImage"
+    managed_disk_type = "Standard_LRS"
+  }
+
+  os_profile {
+    computer_name = "${var.web_server_name}"
+    admin_username = "webserver"
+    admin_password = "Passw0rd1234"
+  }
+  os_profile_windows_config{
+
+  }
+}
 
