@@ -21,6 +21,12 @@ az vm image list-offers -l "Japan West" -p "MicrosoftWindowsServer" >> offers_li
 az vm image list-skus -l "Japan West" -p "MicrosoftWindowsServer" -f "WindowsServer" >> skus_list.txt
 ```
 
+### VM size lookup
+- list all size according to location.
+```
+az vm list-sizes -l "Japan West" >> size_list.txt
+```
+
 
 ## Basic Files
 
@@ -49,3 +55,7 @@ terraform apply
 ```
 terraform destroy
 ```
+
+## Other Note:
+- Standard_D2s_v3, Cognosys, MySQL 5.7 With CentOS 7.7
+- 區域: 美國西部 2, 目前大小: Standard_D2s_v3, 映像: Windows Server 2012 R2 Datacenter
