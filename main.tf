@@ -11,6 +11,7 @@ variable "web_server_rg" {}
 variable "resource_prefix" {}
 variable "web_server_address_space" {}
 variable "web_server_address_prefix" {}
+variable "web_server_name" {}
 
 ## VNET
 
@@ -59,6 +60,19 @@ resource "azurerm_subnet" "web_server_subnet" {
   resource_group_name = "${azurerm_resource_group.web_server_rg.name}"
   virtual_network_name = "${azurerm_virtual_network.web_server_vnet.name}"
   address_prefix = "${var.web_server_address_prefix}"
+}
+
+# Azure Network Interface (private/public<Static/Dynamic>, DNS)
+resource "azurerm_network_interface" "web_server_nic" {
+  name                  = "${var.web_server_name}-nic"
+  location              = "${azurerm_resource_group.web_server_rg.location}"
+  resource_group_name   = "${azurerm_resource_group.web_server_rg.name}"
+  
+  ip_configuration {
+    name                          = "${var.web_server_name}-ip"
+    subnet_id                     = "${azurerm_subnet.web_server_subnet.id}"
+    private_ip_address_allocation = "Dynamic"
+  }
 }
 
 
