@@ -10,6 +10,7 @@ variable "web_server_location" {}
 variable "web_server_rg" {}
 variable "resource_prefix" {}
 variable "web_server_address_space" {}
+variable "web_server_address_prefix" {}
 
 ## VNET
 
@@ -45,5 +46,19 @@ resource "azurerm_virtual_network" "web_server_vnet" {
     location            = "${azurerm_resource_group.web_server_rg.location}"
     resource_group_name = "${azurerm_resource_group.web_server_rg.name}"
     address_space       = ["${var.web_server_address_space}"]
+    depends_on          = ["azurerm_resource_group.web_server_rg"]
+
+    
+    tags = {
+        environment = "Stage"
+    }
 }
+# Subnet
+resource "azurerm_subnet" "web_server_subnet" {
+  name = "${var.resource_prefix}_subnet"
+  resource_group_name = "${azurerm_resource_group.web_server_rg.name}"
+  virtual_network_name = "${azurerm_virtual_network.web_server_vnet.name}"
+  address_prefix = "${var.web_server_address_prefix}"
+}
+
 
