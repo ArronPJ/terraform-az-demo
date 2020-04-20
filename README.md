@@ -1,5 +1,47 @@
 # How to use Terraform with Azure
 
+### VM size lookup
+- list all size according to location.
+```
+az vm list-sizes -l "Japan West" >> size_list.txt
+```
+## Basic Files
+
+### main.tf
+- Resource list
+- Variable for security reason not in git repos.
+
+## How to use Terraform CLI
+
+#### Step0:
+- How to create "Application Registration"
+- [Create Application Registration](docs/howto_create_application_registration.md) manually from website console.
+
+
+#### Step1: Create "terraform.tfvars"
+- file will locate in the same folder as main.tf.
+- Please copy content from [sample](docs/sample_terraform_tfvars.md)
+
+#### Step2: CLI (init)
+- download according to version.
+```
+terraform init
+```
+#### Step3: CLI (plan)
+```
+terraform plan
+```
+
+#### Step4: CLI (apply)
+```
+terraform apply
+```
+
+#### Step5: CLI (destroy)
+```
+terraform destroy
+```
+
 ## References:
 - [HW](https://docs.microsoft.com/zh-tw/azure/virtual-machines/windows/sizes)
 ### VM Image Info Search
@@ -21,45 +63,7 @@ az vm image list-offers -l "Japan West" -p "MicrosoftWindowsServer" >> offers_li
 az vm image list-skus -l "Japan West" -p "MicrosoftWindowsServer" -f "WindowsServer" >> skus_list.txt
 ```
 
-### VM size lookup
-- list all size according to location.
-```
-az vm list-sizes -l "Japan West" >> size_list.txt
-```
-
-
-## Basic Files
-
-### main.tf
-- Resource list
-- Variable for security reason not in git repos.
-
-## How to use Terraform CLI
-
-#### Step0: Create "terraform.tfvars"
-- file will locate in the same folder as main.tf.
-- Please copy content from [sample](docs/sample_terraform_tfvars.md)
-
-#### Step1: CLI (init)
-- download according to version.
-```
-terraform init
-```
-#### Step2: CLI (plan)
-```
-terraform plan
-```
-
-#### Step3: CLI (apply)
-```
-terraform apply
-```
-
-#### Step4: CLI (destroy)
-```
-terraform destroy
-```
-
 ## Other Note:
 - Standard_D2s_v3, Cognosys, MySQL 5.7 With CentOS 7.7
 - 區域: 美國西部 2, 目前大小: Standard_D2s_v3, 映像: Windows Server 2012 R2 Datacenter
+
