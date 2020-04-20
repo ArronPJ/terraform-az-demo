@@ -36,6 +36,10 @@ az vm list-sizes -l "Japan West" >> size_list.txt
 
 ## How to use Terraform CLI
 
+#### Step0: Create "terraform.tfvars"
+- file will locate in the same folder as main.tf.
+- Please copy content from [sample](docs/sample_terraform_tfvars.md)
+
 #### Step1: CLI (init)
 - download according to version.
 ```
